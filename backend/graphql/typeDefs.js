@@ -9,6 +9,13 @@ registeredAt:String!
 type Token{
 token:String!
 }
+type Blog{
+id:ID!
+title:String!
+description:String!
+createdBy:ID!
+createdAt:String!
+}
 input CreateUserInput{
 name:String!
 email:String!
@@ -18,12 +25,18 @@ input LoginUserInput{
 email:String!
 password:String!
 }
+input CreateBlogInput{
+title:String!
+description:String!
+}
 type Query{
 getAllUsers:[User!]!
+getAllBlogs:[Blog!]!
 }
 type Mutation{
 createUser(userNew:CreateUserInput):User!
 loginUser(loginInput:LoginUserInput):Token!
+createBlog(blogNew:CreateBlogInput):Blog!
 }
 `;
 export default typeDefs;
