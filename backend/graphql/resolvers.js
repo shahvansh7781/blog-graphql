@@ -10,6 +10,9 @@ const resolvers = {
     async getAllBlogs(_, {}) {
       return await Blog.find();
     },
+    async getUserBlogs(_,{userId}){
+      return await Blog.find({createdBy:userId})
+    }
   },
   Mutation: {
     async createUser(_, { userNew }) {
@@ -46,10 +49,12 @@ const resolvers = {
       );
       return { token };
     },
-    async createBlog(_, { blogNew }, { id }) {
-      if (!id) {
+    async createBlog(_, { blogNew }, { token }) {
+      // console.log(token);
+      if (!token) {
         throw new Error("You must be Logged In!");
       }
+      const {id} = jwt.verify(token,"KHGSFHJKKLBN123dgvvgtyyuujbbb");
       const newBlog = new Blog({
         ...blogNew,
         createdBy: id,
