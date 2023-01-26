@@ -5,6 +5,7 @@ name:String!
 email:String!
 password:String!
 registeredAt:String!
+blogs:[Blog!]
 }
 
 type Token{
@@ -38,7 +39,7 @@ description:String!
 type Query{
 getAllUsers:[User!]!
 getAllBlogs:[Blog!]!
-getUserBlogs(userId:ID):[Blog!]!
+getUserBlogs(userId:ID!):[Blog!]!
 }
 
 type Mutation{

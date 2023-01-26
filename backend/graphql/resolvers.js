@@ -4,18 +4,18 @@ import jwt from "jsonwebtoken";
 import Blog from "../models/blogModel.js";
 const resolvers = {
   Query: {
-    async getAllUsers(_, {}) {
+    getAllUsers: async (_, {}) => {
       return await User.find();
     },
-    async getAllBlogs(_, {}) {
+    getAllBlogs: async (_, {}) => {
       return await Blog.find();
     },
-    async getUserBlogs(_,{userId}){
-      return await Blog.find({createdBy:userId})
-    }
+    getUserBlogs: async (_, { userId }) => {
+      return await Blog.find({ createdBy: userId });
+    },
   },
   Mutation: {
-    async createUser(_, { userNew }) {
+    createUser: async (_, { userNew }) => {
       const user = await User.findOne({ email: userNew.email });
       if (user) {
         throw new Error("User already Exists!");
@@ -28,7 +28,7 @@ const resolvers = {
       });
       return await newuser.save();
     },
-    async loginUser(_, { loginInput }) {
+    loginUser: async (_, { loginInput }) => {
       const user = await User.findOne({ email: loginInput.email });
       if (!user) {
         throw new Error("Invalid Email or Password!");
@@ -49,12 +49,12 @@ const resolvers = {
       );
       return { token };
     },
-    async createBlog(_, { blogNew }, { token }) {
+    createBlog: async (_, { blogNew }, { token }) => {
       // console.log(token);
       if (!token) {
         throw new Error("You must be Logged In!");
       }
-      const {id} = jwt.verify(token,"KHGSFHJKKLBN123dgvvgtyyuujbbb");
+      const { id } = jwt.verify(token, "KHGSFHJKKLBN123dgvvgtyyuujbbb");
       const newBlog = new Blog({
         ...blogNew,
         createdBy: id,
@@ -62,6 +62,9 @@ const resolvers = {
       });
       return await newBlog.save();
     },
+  },
+  User: {
+    blogs: async (user) => await Blog.find({ createdBy: user._id }),
   },
 };
 export default resolvers;
